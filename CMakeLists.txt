@@ -23,8 +23,8 @@ find_package(tf2_ros REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 
-add_library(${PROJECT_NAME}
-)
+# add_library(${PROJECT_NAME}
+# )
 
 install(DIRECTORY
   launch
