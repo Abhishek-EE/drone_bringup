@@ -19,15 +19,6 @@ def generate_launch_description():
 
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([sensor_integration_dir_launch, '/sensor_integration_suite.launch.py'])
-        ),
-        Node(
-            package='sensor_integration_suite',
-            executable='pointcloud_fusion_node',  # Replace with your actual executable name
-            name='pointcloud_fusion_node',
-            parameters=[{'zed_cloud_topic_name': '/zed/zed_node/point_cloud/cloud_registered', 
-                         'vertical_pc_topic_name': '/lidar/points_vt',
-                         'horizontal_pc_topic_name':'/lidar/points_hz'}],
-            output='screen'
-        ),
+        )
 
     ])
