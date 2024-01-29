@@ -18,7 +18,7 @@ def generate_launch_description():
         ),
 
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([sensor_integration_dir_launch, '/sensor_integration_suite.launch.py'])
+            PythonLaunchDescriptionSource([sensor_integration_dir_launch, '/sensor_integration.launch.py'])
         )
 
     ])
