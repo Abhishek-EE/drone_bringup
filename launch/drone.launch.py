@@ -11,6 +11,10 @@ def generate_launch_description():
         get_package_share_directory('sensor_integration_suite'),
         'launch'
     )
+    drone_launch_dir = os.path.join(
+        get_package_share_directory('drone_bringup'),
+        'launch'
+    )
 
     return LaunchDescription([
         IncludeLaunchDescription(
@@ -21,7 +25,7 @@ def generate_launch_description():
             PythonLaunchDescriptionSource([sensor_integration_dir_launch, '/sensor_integration.launch.py'])
         ),
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([ThisLaunchFileDir(), '/rtabmap.launch.py'])
+            PythonLaunchDescriptionSource([drone_launch_dir, '/rtabmap.launch.py'])
         )
 
     ])
