@@ -23,9 +23,9 @@ def generate_launch_description():
 
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([sensor_integration_dir_launch, '/sensor_integration.launch.py'])
-        ),
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([drone_launch_dir, '/rtabmap.launch.py'])
         )
+        # IncludeLaunchDescription(
+        #     PythonLaunchDescriptionSource([drone_launch_dir, '/rtabmap.launch.py'])
+        # )
 
     ])
