@@ -15,7 +15,7 @@ def generate_launch_description():
             description='Use simulation (Gazebo) clock if true'),
 
         Node(
-            package='rtabmap_ros',
+            package='rtabmap_slam',
             executable='rtabmap',
             name='rtabmap',
             output='screen',
