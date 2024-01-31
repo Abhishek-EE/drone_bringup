@@ -25,18 +25,18 @@ def generate_launch_description():
                 'odom_frame_id': 'odom',
                 'subscribe_scan': True,
                 'subscribe_stereo': True,
-                'approx_sync': False,
+                'approx_sync': True,
                 # Additional RTAB-Map parameters...
             }],
             remappings=[
                 ('scan_cloud', '/merged/point_cloud'), # if pointcloud format
-                ('rgb/image', '/zed/rgb/image'),
+                ('rgb/image', '/zed/zed_node/rgb/image_rect_color'),
                 ('depth/image', '/zed/depth/image'),
-                ('left/image_rect', '/zed/left/image_rect_color'),
-                ('right/image_rect', '/zed/right/image_rect_color'),
-                ('left/camera_info', '/zed/left/camera_info'),
-                ('right/camera_info', '/zed/right/camera_info'),
-                ('odom', '/zed/odom')
+                ('left/image_rect', '/zed/zed_node/left/image_rect_color'),
+                ('right/image_rect', '/zed/zed_node/right/image_rect_color'),
+                ('left/camera_info', '/zed/zed_node/left/camera_info'),
+                ('right/camera_info', '/zed/zed_node/right/camera_info'),
+                ('odom', '/zed/zed_node/odom')
             ],
             arguments=['-d', LaunchConfiguration('use_sim_time')]
         ),
