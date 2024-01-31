@@ -20,6 +20,7 @@ def generate_launch_description():
             name='rtabmap',
             output='screen',
             parameters=[{
+                'rtabmap_args': "--delete_db_on_start",
                 'use_sim_time': use_sim_time,
                 'frame_id': 'base_link',
                 'odom_frame_id': 'odom',
@@ -39,6 +40,13 @@ def generate_launch_description():
                 ('odom', '/zed/zed_node/odom')
             ],
             arguments=['-d', LaunchConfiguration('use_sim_time')]
+        ),
+        Node(
+            package='rtabmap_viz',
+            executable='rtabmap_viz',
+            name='rtabmapviz',
+            output='screen',
+            parameters=[{'Rtabmapviz/ShowRtabmapviz': True}]
         ),
 
         # Add other necessary nodes (like odometry)
