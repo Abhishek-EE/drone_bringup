@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="evoii_drone">
-
+  <!--default values are in meters and radians-->
   <!-- Basic Drone Structure -->
   <link name="base_link">
     <visual>
@@ -13,7 +13,7 @@
 
   <!-- Horizontal LiDAR -->
   <joint name="horizontal_lidar_joint" type="fixed">
-    <origin xyz="0.0 -0.07 -0.04" rpy="1.5708 0 0"/> <!-- Adjust position and orientation -->
+    <origin xyz="-0.04 0.00 0.07" rpy="0 0 0"/> <!-- Adjust position and orientation -->
     <parent link="base_link"/>
     <child link="horizontal_lidar_link"/>
   </joint>
@@ -29,7 +29,7 @@
 
   <!-- Vertical LiDAR -->
   <joint name="vertical_lidar_joint" type="fixed">
-    <origin xyz="0.0 0.07 -0.192" rpy="3.14159 0 0"/> <!-- Adjust position and orientation -->
+    <origin xyz="-0.192 0 -0.07" rpy="0 1.507 0"/> <!-- Adjust position and orientation -->
     <parent link="base_link"/>
     <child link="vertical_lidar_link"/>
   </joint>
