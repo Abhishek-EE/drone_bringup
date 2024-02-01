@@ -15,10 +15,10 @@
   <joint name="horizontal_lidar_joint" type="fixed">
     <origin xyz="-0.04 0.00 0.07" rpy="0 0 0"/> <!-- Adjust position and orientation -->
     <parent link="base_link"/>
-    <child link="horizontal_lidar_link"/>
+    <child link="horizontal_laser_link"/>
   </joint>
 
-  <link name="horizontal_lidar_link">
+  <link name="horizontal_laser_link">
     <visual>
       <geometry>
         <cylinder length="0.1" radius="0.05"/>
@@ -31,10 +31,10 @@
   <joint name="vertical_lidar_joint" type="fixed">
     <origin xyz="-0.192 0 -0.07" rpy="0 1.507 0"/> <!-- Adjust position and orientation -->
     <parent link="base_link"/>
-    <child link="vertical_lidar_link"/>
+    <child link="vertical_laser_link"/>
   </joint>
 
-  <link name="vertical_lidar_link">
+  <link name="vertical_laser_link">
     <visual>
       <geometry>
         <cylinder length="0.1" radius="0.05"/>

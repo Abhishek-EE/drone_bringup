@@ -29,6 +29,7 @@ find_package(sensor_msgs REQUIRED)
 install(DIRECTORY
   launch
   urdf
+  config
   DESTINATION share/${PROJECT_NAME}
 )
 
