@@ -3,11 +3,18 @@ from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.substitutions import FindPackageShare
 from launch_ros.actions import Node
+from ament_index_python.packages import get_package_share_directory
+import os
 
 def generate_launch_description():
-    config_file_path = PathJoinSubstitution([
-        FindPackageShare('drone_bringup'), 'config', 'my_cartographer_config.lua'
-    ])
+    # config_file_path = PathJoinSubstitution([
+    #     FindPackageShare('drone_bringup'), 'config', 'my_cartographer_config.lua'
+    # ])
+    config_file_path = os.path.join(
+        get_package_share_directory('drone_bringup'),
+        'config',
+        'my_cartographer_config.lua'
+    )
 
     return LaunchDescription([
         DeclareLaunchArgument(
