@@ -12,39 +12,30 @@ def generate_launch_description():
     # ])
     config_file_path = os.path.join(
         get_package_share_directory('drone_bringup'),
-        'config',
-        'my_cartographer_config.lua'
+        'config'
     )
 
     return LaunchDescription([
-        DeclareLaunchArgument(
-            'config_file',
-            default_value=config_file_path,
-            description='Path to the cartographer configuration file.'
-        ),
         Node(
             package='cartographer_ros',
             executable='cartographer_node',
             name='cartographer_node',
-            parameters=[{'configuration_basename': LaunchConfiguration('config_file')}],
-            remappings=[
-                # Remap the merged point cloud topic if necessary
-                ('/points2', '/merged/point_cloud'),
-                # ('/points2_1','/lidar/points_vt'),
-                # ('points2_2','/lidar/points_hz'),
-                # ('points2_3','/zed/zed_node/point_cloud/cloud_registered'),
-                ('odom','/zed/zed_node/odom'),
-                ('imu','/zed/zed_node/imu/data')
-                # Add other necessary remappings here
+            parameters=[{
+                'use_sim_time': False,  # Example parameter
+                # Add other parameters as needed
+            }],
+            arguments=[
+                '-configuration_directory', config_file_path,
+                '-configuration_basename', 'my_cartographer_config.lua',
+                # Add other command line arguments as needed
             ],
+            remappings=[
+                ('/points2', '/merged/point_cloud'),
+                ('odom', '/zed/zed_node/odom'),
+                ('imu', '/zed/zed_node/imu/data_raw'),
+                # Add other remappings as needed
+            ],
+            output='screen'
         ),
-        # Optionally launch rviz for visualization
-        # Node(
-        #     package='rviz2',
-        #     executable='rviz2',
-        #     name='rviz2',
-        #     arguments=['-d', PathJoinSubstitution([
-        #         FindPackageShare('drone_bringup'), 'rviz', 'drone_slam.rviz'
-        #     ])],
-        # ),
+        # Add other nodes or launch actions as needed
     ])
