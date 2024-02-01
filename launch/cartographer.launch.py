@@ -22,9 +22,9 @@ def generate_launch_description():
             parameters=[{'configuration_basename': LaunchConfiguration('config_file')}],
             remappings=[
                 # Remap the merged point cloud topic if necessary
-                # ('/points2', '/merged/point_cloud'),
-                ('/points2_1','/lidar/points_vt'),
-                ('points2_2','/lidar/points_hz'),
+                ('/points2', '/merged/point_cloud'),
+                # ('/points2_1','/lidar/points_vt'),
+                # ('points2_2','/lidar/points_hz'),
                 # ('points2_3','/zed/zed_node/point_cloud/cloud_registered'),
                 ('odom','/zed/zed_node/odom'),
                 ('imu','/zed/zed_node/imu/data')
