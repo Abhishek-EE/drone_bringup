@@ -1,5 +1,5 @@
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument
+from launch.actions import DeclareLaunchArgument, ExecuteProcess
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.substitutions import FindPackageShare
 from launch_ros.actions import Node
@@ -12,6 +12,19 @@ def generate_launch_description():
         get_package_share_directory('drone_bringup'),
         'config'
     )
+    map_file_path = LaunchConfiguration('map_file_path', 
+                                        default='map.pbstream')
+    
+    finish_trajectory_cmd = [
+        'ros2', 'service', 'call', '/finish_trajectory',
+        'cartographer_ros_msgs/srv/FinishTrajectory', '\'{"trajectory_id: 0"}\''
+    ]
+
+    write_state_cmd = [
+        'ros2', 'service', 'call', '/write_state',
+        'cartographer_ros_msgs/srv/WriteState',
+        '\'{"filename": "', map_file_path, '", "include_unfinished_submaps": true}\''
+    ]
     
     # Cartographer node
     cartographer_node = Node(
@@ -28,12 +41,12 @@ def generate_launch_description():
             # Add other command line arguments as needed
         ],
         remappings=[
-            ('/points2', '/merged/point_cloud'),
+            # ('/points2', '/merged/point_cloud'),
             ('/odom', '/zed/zed_node/odom'),
             ('/imu', '/zed/zed_node/imu/data_raw'),
-            # ('/points2_1','/lidar/points_hz'),
-            # ('/points2_2','/lidar/points_vt'),
-            # ('/points2_3','/zed/zed_node/point_cloud/cloud_registered')
+            ('/points2_1','/lidar/points_hz'),
+            ('/points2_2','/lidar/points_vt'),
+            ('/points2_3','/zed/zed_node/point_cloud/cloud_registered')
             # Add other remappings as needed
         ],
         output='screen'
@@ -55,9 +68,33 @@ def generate_launch_description():
         ],
         output='screen'
     )
+    # Command to finish the trajectory
+    finish_trajectory = ExecuteProcess(
+        cmd=finish_trajectory_cmd,
+        name='finish_trajectory',
+    )
+
+    # Command to write the state to a file
+    write_state = ExecuteProcess(
+        cmd=write_state_cmd,
+        name='write_state',
+    )
+
 
     return LaunchDescription([
+        DeclareLaunchArgument(
+            'config_file_path',
+            default_value=config_file_path,
+            description='Path to the Cartographer configuration file.',
+        ),
+        DeclareLaunchArgument(
+            'map_file_path',
+            default_value=map_file_path,
+            description='Path where the map should be saved.',
+        ),
         cartographer_node,
         occupancy_grid_node,
+        finish_trajectory,
+        write_state,
         # Add other nodes or launch actions as needed
     ])
