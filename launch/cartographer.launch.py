@@ -43,7 +43,7 @@ def generate_launch_description():
         remappings=[
             # ('/points2', '/merged/point_cloud'),
             ('/odom', '/zed/zed_node/odom'),
-            ('/imu', '/zed/zed_node/imu/data_raw'),
+            ('/imu', '/zed/zed_node/imu/data'),
             ('/points2_1','/lidar/points_hz'),
             ('/points2_2','/lidar/points_vt'),
             ('/points2_3','/zed/zed_node/point_cloud/cloud_registered')
@@ -82,19 +82,19 @@ def generate_launch_description():
 
 
     return LaunchDescription([
-        DeclareLaunchArgument(
-            'config_file_path',
-            default_value=config_file_path,
-            description='Path to the Cartographer configuration file.',
-        ),
-        DeclareLaunchArgument(
-            'map_file_path',
-            default_value=map_file_path,
-            description='Path where the map should be saved.',
-        ),
+        # DeclareLaunchArgument(
+        #     'config_file_path',
+        #     default_value=config_file_path,
+        #     description='Path to the Cartographer configuration file.',
+        # ),
+        # DeclareLaunchArgument(
+        #     'map_file_path',
+        #     default_value=map_file_path,
+        #     description='Path where the map should be saved.',
+        # ),
         cartographer_node,
         occupancy_grid_node,
-        finish_trajectory,
-        write_state,
+        # finish_trajectory,
+        # write_state,
         # Add other nodes or launch actions as needed
     ])
