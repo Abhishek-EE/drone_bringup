@@ -30,6 +30,7 @@ install(DIRECTORY
   launch
   urdf
   config
+  assets
   DESTINATION share/${PROJECT_NAME}
 )
 
