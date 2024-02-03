@@ -5,12 +5,12 @@ options = {
   map_builder = MAP_BUILDER,
   trajectory_builder = TRAJECTORY_BUILDER,
   map_frame = "map",
-  tracking_frame = "base_link",
-  published_frame = "base_link",
-  odom_frame = "odom_cg",
+  tracking_frame = "zed_imu_link", -- Assuming 'imu_link' is the frame provided by the IMU
+  published_frame = "odom",
+  odom_frame = "odom",
   provide_odom_frame = false,
   publish_frame_projected_to_2d = false,
-  use_odometry = true,
+  use_odometry = false, -- Set to true if odometry data from ZED or another source is reliable
   use_nav_sat = false,
   use_landmarks = false,
   num_laser_scans = 0,
@@ -28,23 +28,51 @@ options = {
   landmarks_sampling_ratio = 1.0,
 }
 
-MAP_BUILDER.use_trajectory_builder_3d = true -- Enable 3D SLAM.
+MAP_BUILDER.use_trajectory_builder_3d = true
 
--- 3D trajectory builder settings
-TRAJECTORY_BUILDER_3D.num_accumulated_range_data = 1
-TRAJECTORY_BUILDER_3D.min_range = 0.1
-TRAJECTORY_BUILDER_3D.max_range = 30.0 -- Adjust based on ZED Mini's effective range and your environment.
-TRAJECTORY_BUILDER_3D.submaps.high_resolution = 0.2
-TRAJECTORY_BUILDER_3D.submaps.low_resolution = 0.45
-TRAJECTORY_BUILDER_3D.submaps.num_range_data = 160
-TRAJECTORY_BUILDER_3D.voxel_filter_size = 0.05
+TRAJECTORY_BUILDER_3D = {
+  num_accumulated_range_data = 1,
+  min_range = 0.1,
+  max_range = 30.0,
+  submaps = {
+    high_resolution = 0.2,
+    low_resolution = 0.45,
+    num_range_data = 160,
+  },
+  voxel_filter_size = 0.05,
 
--- IMU settings are critical for 3D SLAM
-TRAJECTORY_BUILDER_3D.use_imu_data = true -- Ensure IMU data is used for SLAM.
-TRAJECTORY_BUILDER_3D.imu_gravity_time_constant = 10.0
-TRAJECTORY_BUILDER_3D.use_online_correlative_scan_matching = true
+  use_imu_data = true,
+  imu_gravity_time_constant = 10.0,
+  real_time_correlative_scan_matcher = {
+    linear_search_window = 0.1,
+    angular_search_window = math.rad(20.0),
+    translation_delta_cost_weight = 1e-1,
+    rotation_delta_cost_weight = 1e-1,
+  },
+  ceres_scan_matcher = {
+    occupied_space_weight_0 = 1.0,
+    occupied_space_weight_1 = 6.0,
+    translation_weight = 5e2,
+    rotation_weight = 4e2,
+    only_optimize_yaw = false,
+    ceres_solver_options = {
+      use_nonmonotonic_steps = false,
+      max_num_iterations = 20,
+      num_threads = 1,
+    },
+  },
+  motion_filter = {
+    max_time_seconds = 5,
+    max_distance_meters = 0.1,
+    max_angle_radians = math.rad(0.1),
+  },
+  imu_gravity_time_constant = 10.0,
+  pose_extrapolator = {
+    use_imu_based = true,
+    imu_gravity_time_constant = 10.0,
+  },
+}
 
--- Optimization problem settings (adjust based on testing and the specific environment)
 POSE_GRAPH.optimization_problem.huber_scale = 5e2
 POSE_GRAPH.optimize_every_n_nodes = 320
 POSE_GRAPH.constraint_builder.sampling_ratio = 0.03

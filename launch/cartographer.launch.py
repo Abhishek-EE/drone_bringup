@@ -41,7 +41,7 @@ def generate_launch_description():
         ],
         remappings=[
             ('/points2', '/merged/point_cloud'),
-            ('/odom', '/zed/zed_node/odom'),
+            # ('/odom', '/zed/zed_node/odom'),
             ('/imu', '/zed/zed_node/imu/data'),
             # ('/points2_1','/lidar/points_hz'),
             # ('/points2_2','/lidar/points_vt'),
