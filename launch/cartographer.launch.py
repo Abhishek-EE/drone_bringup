@@ -1,5 +1,5 @@
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, ExecuteProcess, ConditionalProcess
+from launch.actions import DeclareLaunchArgument, ExecuteProcess
 from launch.substitutions import LaunchConfiguration
 from launch.conditions import IfCondition
 from launch_ros.actions import Node
@@ -13,26 +13,6 @@ def generate_launch_description():
     assets_dir = os.path.join(package_dir,'assets')
     config_file_path = os.path.join(package_dir,'config')
     map_file_path = os.path.join(assets_dir,'map.pbstream')
-    bag_file_path = os.path.join(assets_dir,'recorded_data.bag')
-    # Define a launch argument to control bag recording
-    record_bag_arg = DeclareLaunchArgument(
-        'record_bag', default_value='false',
-        description='Set to "true" to record a bag file during this launch session.'
-    )
-    
-    # Use the launch argument value to conditionally start bag recording
-    record_bag = ConditionalProcess(
-        condition=LaunchConfiguration('record_bag'),
-        execute_process=ExecuteProcess(
-            cmd=[
-                'ros2', 'bag', 'record', '-o',
-                bag_file_path,
-                '/merged/point_cloud', '/zed/zed_node/odom',
-                '/zed/zed_node/imu/data','/tf','/tf_static'
-            ],
-            output='screen'
-        )
-    )
     
     finish_trajectory_cmd = [
         'ros2', 'service', 'call', '/finish_trajectory',
@@ -101,8 +81,7 @@ def generate_launch_description():
 
 
     return LaunchDescription([
-        record_bag_arg,
-        record_bag,
+        # record_bag_arg,
         cartographer_node,
         occupancy_grid_node,
         # finish_trajectory,

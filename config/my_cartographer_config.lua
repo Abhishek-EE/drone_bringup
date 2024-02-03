@@ -5,8 +5,8 @@ options = {
   map_builder = MAP_BUILDER,
   trajectory_builder = TRAJECTORY_BUILDER,
   map_frame = "map",
-  tracking_frame = "zed_imu_link",
-  published_frame = "odom",
+  tracking_frame = "base_link",
+  published_frame = "base_link",
   odom_frame = "odom_cg",
   provide_odom_frame = false,
   publish_frame_projected_to_2d = false,
@@ -28,33 +28,28 @@ options = {
   landmarks_sampling_ratio = 1.0,
 }
 
-MAP_BUILDER.use_trajectory_builder_3d = true
+MAP_BUILDER.use_trajectory_builder_3d = true -- Enable 3D SLAM.
 
+-- 3D trajectory builder settings
 TRAJECTORY_BUILDER_3D.num_accumulated_range_data = 1
 TRAJECTORY_BUILDER_3D.min_range = 0.1
-TRAJECTORY_BUILDER_3D.max_range = 100.0
+TRAJECTORY_BUILDER_3D.max_range = 30.0 -- Adjust based on ZED Mini's effective range and your environment.
 TRAJECTORY_BUILDER_3D.submaps.high_resolution = 0.2
 TRAJECTORY_BUILDER_3D.submaps.low_resolution = 0.45
 TRAJECTORY_BUILDER_3D.submaps.num_range_data = 160
 TRAJECTORY_BUILDER_3D.voxel_filter_size = 0.05
 
-TRAJECTORY_BUILDER_3D.high_resolution_adaptive_voxel_filter.max_length = 2.0
-TRAJECTORY_BUILDER_3D.high_resolution_adaptive_voxel_filter.min_num_points = 200
-TRAJECTORY_BUILDER_3D.high_resolution_adaptive_voxel_filter.max_range = 50.0
+-- IMU settings are critical for 3D SLAM
+TRAJECTORY_BUILDER_3D.use_imu_data = true -- Ensure IMU data is used for SLAM.
+TRAJECTORY_BUILDER_3D.imu_gravity_time_constant = 10.0
+TRAJECTORY_BUILDER_3D.use_online_correlative_scan_matching = true
 
-TRAJECTORY_BUILDER_3D.low_resolution_adaptive_voxel_filter.max_length = 4.0
-TRAJECTORY_BUILDER_3D.low_resolution_adaptive_voxel_filter.min_num_points = 400
-TRAJECTORY_BUILDER_3D.low_resolution_adaptive_voxel_filter.max_range = 100.0
-
-TRAJECTORY_BUILDER_3D.motion_filter.max_time_seconds = 5
-TRAJECTORY_BUILDER_3D.motion_filter.max_distance_meters = 0.1
-TRAJECTORY_BUILDER_3D.motion_filter.max_angle_radians = math.rad(0.1)
-
+-- Optimization problem settings (adjust based on testing and the specific environment)
 POSE_GRAPH.optimization_problem.huber_scale = 5e2
 POSE_GRAPH.optimize_every_n_nodes = 320
 POSE_GRAPH.constraint_builder.sampling_ratio = 0.03
 POSE_GRAPH.optimization_problem.ceres_solver_options.max_num_iterations = 10
-POSE_GRAPH.constraint_builder.min_score = 0.62
+POSE_GRAPH.constraint_builder.min_score = 0.55
 POSE_GRAPH.constraint_builder.global_localization_min_score = 0.66
 
 return options
