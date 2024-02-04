@@ -5,6 +5,7 @@ from launch.substitutions import LaunchConfiguration, ThisLaunchFileDir
 from ament_index_python.packages import get_package_share_directory
 from launch_ros.actions import Node
 import os
+import datetime
 
 def generate_launch_description():
     sensor_integration_dir_launch = os.path.join(
@@ -14,7 +15,10 @@ def generate_launch_description():
     package_dir = get_package_share_directory('drone_bringup')
     #Define to assets dir
     assets_dir = os.path.join(package_dir,'assets')
-    bag_file_path = os.path.join(assets_dir,'recorded_data.bag')
+    now = datetime.datetime.now()
+    bag_file_name = now.strftime("%Y%m%d%H%M%S")
+
+    bag_file_path = os.path.join(assets_dir,'recorded_data_'+ bag_file_name +'.bag')
     # Define a launch argument to control bag recording
     # record_bag_arg = DeclareLaunchArgument(
     #     'record_bag', default_value='true',
