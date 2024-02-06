@@ -27,6 +27,7 @@ def generate_launch_description():
                 'subscribe_scan': True,
                 'subscribe_stereo': True,
                 'approx_sync': True,
+                'use_sim_time': LaunchConfiguration('use_sim_time')
                 # Additional RTAB-Map parameters...
             }],
             remappings=[
@@ -46,7 +47,8 @@ def generate_launch_description():
             executable='rtabmap_viz',
             name='rtabmapviz',
             output='screen',
-            parameters=[{'Rtabmapviz/ShowRtabmapviz': True}]
+            parameters=[{'Rtabmapviz/ShowRtabmapviz': True,
+                         'use_sim_time':LaunchConfiguration('use_sim_time')}]
         ),
 
         # Add other necessary nodes (like odometry)
