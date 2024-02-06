@@ -13,6 +13,10 @@ def generate_launch_description():
     assets_dir = os.path.join(package_dir,'assets')
     config_file_path = os.path.join(package_dir,'config')
     map_file_path = os.path.join(assets_dir,'map.pbstream')
+
+    use_sim_time_arg = DeclareLaunchArgument(
+        'use_sim_time', default_value='true',
+        description='Use simulation time')
     
     finish_trajectory_cmd = [
         'ros2', 'service', 'call', '/finish_trajectory',
@@ -31,7 +35,7 @@ def generate_launch_description():
         executable='cartographer_node',
         name='cartographer_node',
         parameters=[{
-            'use_sim_time': False,  # Example parameter
+            'use_sim_time': LaunchConfiguration('use_sim_time'),  # Example parameter
             # Add other parameters as needed
         }],
         arguments=[
@@ -41,7 +45,7 @@ def generate_launch_description():
         ],
         remappings=[
             ('/points2', '/merged/point_cloud'),
-            # ('/odom', '/zed/zed_node/odom'),
+            ('/odom', '/zed/zed_node/odom'),
             ('/imu', '/zed/zed_node/imu/data'),
             # ('/points2_1','/lidar/points_hz'),
             # ('/points2_2','/lidar/points_vt'),
@@ -57,7 +61,7 @@ def generate_launch_description():
         executable='occupancy_grid_node',
         name='occupancy_grid_node',
         parameters=[{
-            'use_sim_time': False,
+            'use_sim_time': LaunchConfiguration('use_sim_time'),
             # Add other parameters specific to the occupancy grid node as needed
             'resolution': 0.05,  # Example parameter for grid resolution
         }],
@@ -81,7 +85,7 @@ def generate_launch_description():
 
 
     return LaunchDescription([
-        # record_bag_arg,
+        use_sim_time_arg,
         cartographer_node,
         occupancy_grid_node,
         # finish_trajectory,
