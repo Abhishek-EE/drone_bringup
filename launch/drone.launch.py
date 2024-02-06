@@ -13,6 +13,10 @@ def generate_launch_description():
         get_package_share_directory('sensor_integration_suite'),
         'launch'
     )
+    gazebo_ros_launch_dir = os.path.join(
+        get_package_share_directory('gazebo_ros'),
+        'launch'
+    )
     package_dir = get_package_share_directory('drone_bringup')
     assets_dir = os.path.join(package_dir,'assets')
     config_dir = os.path.join(package_dir,'config')
@@ -23,6 +27,7 @@ def generate_launch_description():
     use_sim_time_arg = DeclareLaunchArgument(
         'use_sim_time', default_value='true',
         description='Use simulation time')   
+    
     
     # Record Bag file
     record_bag = ExecuteProcess(
@@ -42,14 +47,14 @@ def generate_launch_description():
         launch_arguments={'use_sim_time': LaunchConfiguration('use_sim_time')}.items(),
     )
 
+    gazebo_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([gazebo_ros_launch_dir,'/gazebo.launch.py'])
+    )
+    launch_list = []
+    if(LaunchConfiguration('use_sim_time')):
+        launch_list.append(gazebo_launch)
+        launch_list.append(record_bag)
+    launch_list.append(robot_state_publisher)
+    launch_list.append(sensor_integration_suite)
 
-    return LaunchDescription([
-        use_sim_time_arg,
-        record_bag,
-        robot_state_publisher,
-        sensor_integration_suite
-        # IncludeLaunchDescription(
-        #     PythonLaunchDescriptionSource([drone_launch_dir, '/rtabmap.launch.py'])
-        # )
-
-    ])
+    return LaunchDescription(launch_list)
