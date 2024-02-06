@@ -1,7 +1,7 @@
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription,ExecuteProcess,DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration, ThisLaunchFileDir
+from launch.substitutions import LaunchConfiguration
 from ament_index_python.packages import get_package_share_directory
 from launch_ros.actions import Node
 import os
@@ -19,7 +19,7 @@ def generate_launch_description():
     )
     package_dir = get_package_share_directory('drone_bringup')
     assets_dir = os.path.join(package_dir,'assets')
-    config_dir = os.path.join(package_dir,'config')
+    package_launch_dir = os.path.join(package_dir,'launch')
     now = datetime.datetime.now()
     bag_file_name = now.strftime("%Y%m%d%H%M%S")
     bag_file_path = os.path.join(assets_dir,'recorded_data_'+ bag_file_name +'.bag')
@@ -39,7 +39,7 @@ def generate_launch_description():
             output='screen'
     )
     robot_state_publisher = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([ThisLaunchFileDir(), '/rsp.launch.py']),
+        PythonLaunchDescriptionSource([package_launch_dir, '/rsp.launch.py']),
         launch_arguments={'use_sim_time': LaunchConfiguration('use_sim_time')}.items(),
     )
     sensor_integration_suite = IncludeLaunchDescription(
