@@ -53,7 +53,7 @@ def generate_launch_description():
     )
     launch_list = [use_sim_time_arg]
     if(LaunchConfiguration('use_sim_time')):
-        LogInfo(msg=["This is a message printed from the launch file!",LaunchConfiguration('use_sim_time')])
+        launch_list.append(LogInfo(msg=["This is a message printed from the launch file!",LaunchConfiguration('use_sim_time')]))
         launch_list.append(gazebo_launch)
         launch_list.append(record_bag)
     launch_list.append(robot_state_publisher)
