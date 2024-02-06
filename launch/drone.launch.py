@@ -62,8 +62,8 @@ def generate_launch_description():
         robot_state_publisher,# Add robot_state_publisher action here
         sensor_integration_suite# Add sensor_integration_suite action here
     ]
-    return LaunchDescription(
+    return LaunchDescription([
         use_sim_time_arg,
         conditional_actions,
-        *always_included_actions
+        *always_included_actions]
     )
