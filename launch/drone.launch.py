@@ -38,7 +38,7 @@ def generate_launch_description():
         launch_arguments={'use_sim_time': LaunchConfiguration('use_sim_time')}.items(),
     )
     sensor_integration_suite = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([ThisLaunchFileDir(), '/sensor_integration.launch.py']),
+        PythonLaunchDescriptionSource([sensor_integration_dir_launch, '/sensor_integration.launch.py']),
         launch_arguments={'use_sim_time': LaunchConfiguration('use_sim_time')}.items(),
     )
 
