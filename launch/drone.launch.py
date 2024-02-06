@@ -1,10 +1,9 @@
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription,ExecuteProcess,DeclareLaunchArgument
+from launch.actions import IncludeLaunchDescription,ExecuteProcess,DeclareLaunchArgument, GroupAction, LogInfo
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from ament_index_python.packages import get_package_share_directory
-from launch_ros.actions import Node
-from launch.actions import LogInfo
+from launch.conditions import IfCondition
 import os
 import datetime
 
@@ -51,12 +50,20 @@ def generate_launch_description():
     gazebo_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([gazebo_ros_launch_dir,'/gazebo.launch.py'])
     )
-    launch_list = [use_sim_time_arg]
-    if(LaunchConfiguration('use_sim_time')):
-        launch_list.append(LogInfo(msg=["This is a message printed from the launch file!",LaunchConfiguration('use_sim_time')]))
-        launch_list.append(gazebo_launch)
-        launch_list.append(record_bag)
-    launch_list.append(robot_state_publisher)
-    launch_list.append(sensor_integration_suite)
-
-    return LaunchDescription(launch_list)
+    conditional_actions = GroupAction(
+        actions=[
+            LogInfo(msg=["This is a message printed from the launch file!"]),
+            gazebo_launch,# Add gazebo_launch action here
+            record_bag# Add record_bag action here
+        ],
+        condition=IfCondition(LaunchConfiguration('use_sim_time'))
+    )
+    always_included_actions = [
+        robot_state_publisher,# Add robot_state_publisher action here
+        sensor_integration_suite# Add sensor_integration_suite action here
+    ]
+    return LaunchDescription(
+        use_sim_time_arg,
+        conditional_actions,
+        *always_included_actions
+    )
