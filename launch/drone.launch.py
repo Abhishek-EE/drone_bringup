@@ -25,7 +25,7 @@ def generate_launch_description():
     bag_file_path = os.path.join(assets_dir,'recorded_data_'+ bag_file_name +'.bag')
 
     use_sim_time_arg = DeclareLaunchArgument(
-        'use_sim_time', default_value='true',
+        'use_sim_time', default_value='false',
         description='Use simulation time')   
     
     
