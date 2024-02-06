@@ -61,7 +61,7 @@ def generate_launch_description():
         executable='occupancy_grid_node',
         name='occupancy_grid_node',
         parameters=[{
-            'use_sim_time': False,
+            'use_sim_time': LaunchConfiguration('use_sim_time'),
             # Add other parameters specific to the occupancy grid node as needed
             'resolution': 0.05,  # Example parameter for grid resolution
         }],

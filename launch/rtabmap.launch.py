@@ -5,7 +5,6 @@ from launch.actions import DeclareLaunchArgument
 
 def generate_launch_description():
     # Launch arguments to allow for custom configurations
-    use_sim_time = LaunchConfiguration('use_sim_time', default='false')
 
     return LaunchDescription([
         # Declare launch arguments
@@ -21,7 +20,6 @@ def generate_launch_description():
             output='screen',
             parameters=[{
                 'rtabmap_args': "--delete_db_on_start",
-                'use_sim_time': use_sim_time,
                 'frame_id': 'base_link',
                 'odom_frame_id': 'odom',
                 'subscribe_scan': True,
@@ -39,8 +37,7 @@ def generate_launch_description():
                 ('left/camera_info', '/zed/zed_node/left/camera_info'),
                 ('right/camera_info', '/zed/zed_node/right/camera_info'),
                 ('odom', '/zed/zed_node/odom')
-            ],
-            arguments=['-d', LaunchConfiguration('use_sim_time')]
+            ]
         ),
         Node(
             package='rtabmap_viz',

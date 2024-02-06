@@ -1,6 +1,7 @@
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch.actions import DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration
 from launch import LaunchDescription
 from launch_ros.actions import Node
 import xacro
@@ -26,7 +27,7 @@ def generate_launch_description():
         executable='robot_state_publisher',
         output='screen',
         parameters=[{'robot_description': robot_description_raw,
-                     'use_sim_time':LaunchDescription('use_sim_time')}] # add other parameters here if required
+                     'use_sim_time':LaunchConfiguration('use_sim_time')}] # add other parameters here if required
     )
 
 
