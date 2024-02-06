@@ -4,6 +4,7 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from ament_index_python.packages import get_package_share_directory
 from launch_ros.actions import Node
+from launch.actions import LogInfo
 import os
 import datetime
 
@@ -50,8 +51,9 @@ def generate_launch_description():
     gazebo_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([gazebo_ros_launch_dir,'/gazebo.launch.py'])
     )
-    launch_list = []
+    launch_list = [use_sim_time_arg]
     if(LaunchConfiguration('use_sim_time')):
+        LogInfo(msg=["This is a message printed from the launch file!",LaunchConfiguration('use_sim_time')])
         launch_list.append(gazebo_launch)
         launch_list.append(record_bag)
     launch_list.append(robot_state_publisher)
