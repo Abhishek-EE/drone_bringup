@@ -15,7 +15,7 @@ def generate_launch_description():
     map_file_path = os.path.join(assets_dir,'map.pbstream')
 
     use_sim_time_arg = DeclareLaunchArgument(
-        'use_sim_time', default_value='true',
+        'use_sim_time', default_value='false',
         description='Use simulation time')
     
     finish_trajectory_cmd = [
