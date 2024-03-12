@@ -49,7 +49,7 @@ def generate_launch_description():
 
     gazebo_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([gazebo_ros_launch_dir,'/gazebo.launch.py']),
-        condition=IfCondition(LaunchConfiguration('use_sime_time'))
+        condition=IfCondition(LaunchConfiguration('use_sim_time'))
     )
 
     # Wait for Gazebo to fully launch and start publishing to /clock
