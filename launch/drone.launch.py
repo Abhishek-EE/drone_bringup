@@ -1,5 +1,5 @@
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription,ExecuteProcess,DeclareLaunchArgument, GroupAction, LogInfo
+from launch.actions import IncludeLaunchDescription,ExecuteProcess,DeclareLaunchArgument, GroupAction, LogInfo, TimerAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from ament_index_python.packages import get_package_share_directory
@@ -34,7 +34,7 @@ def generate_launch_description():
         cmd=[  'ros2', 'bag', 'record', '-o',
                 bag_file_path,
                 '/merged/point_cloud', '/zed/zed_node/odom',
-                '/zed/zed_node/imu/data','/tf','/tf_static'
+                '/zed/zed_node/imu/data','/tf','/tf_static','/clock'
             ],
             output='screen'
     )
@@ -48,12 +48,23 @@ def generate_launch_description():
     )
 
     gazebo_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([gazebo_ros_launch_dir,'/gazebo.launch.py'])
+        PythonLaunchDescriptionSource([gazebo_ros_launch_dir,'/gazebo.launch.py']),
+        condition=IfCondition(LaunchConfiguration('use_sime_time'))
     )
+
+    # Wait for Gazebo to fully launch and start publishing to /clock
+    wait_for_gazebo = TimerAction(
+        period=5.0,  # Adjust this time as necessary
+        actions=[
+            LogInfo(msg=["Gazebo should be ready now, proceeding with other nodes..."]),
+        ],
+        condition=IfCondition(LaunchConfiguration('use_sim_time'))
+    )
+
     conditional_actions = GroupAction(
         actions=[
             LogInfo(msg=["This is a message printed from the launch file!"]),
-            gazebo_launch,# Add gazebo_launch action here
+            # gazebo_launch,# Add gazebo_launch action here
             record_bag# Add record_bag action here
         ],
         condition=IfCondition(LaunchConfiguration('use_sim_time'))
@@ -64,6 +75,8 @@ def generate_launch_description():
     ]
     return LaunchDescription([
         use_sim_time_arg,
+        gazebo_launch,
+        wait_for_gazebo,
         conditional_actions,
         *always_included_actions]
     )
