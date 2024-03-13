@@ -47,24 +47,14 @@ def generate_launch_description():
         launch_arguments={'use_sim_time': LaunchConfiguration('use_sim_time')}.items(),
     )
 
-    gazebo_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([gazebo_ros_launch_dir,'/gazebo.launch.py']),
-        condition=IfCondition(LaunchConfiguration('use_sim_time'))
-    )
-
-    # Wait for Gazebo to fully launch and start publishing to /clock
-    wait_for_gazebo = TimerAction(
-        period=5.0,  # Adjust this time as necessary
-        actions=[
-            LogInfo(msg=["Gazebo should be ready now, proceeding with other nodes..."]),
-        ],
-        condition=IfCondition(LaunchConfiguration('use_sim_time'))
+    clock_publisher = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([package_launch_dir, '/clock_publisher.launch.py'])
     )
 
     conditional_actions = GroupAction(
         actions=[
             LogInfo(msg=["This is a message printed from the launch file!"]),
-            # gazebo_launch,# Add gazebo_launch action here
+            clock_publisher,
             record_bag# Add record_bag action here
         ],
         condition=IfCondition(LaunchConfiguration('use_sim_time'))
@@ -75,8 +65,6 @@ def generate_launch_description():
     ]
     return LaunchDescription([
         use_sim_time_arg,
-        gazebo_launch,
-        wait_for_gazebo,
         conditional_actions,
         *always_included_actions]
     )

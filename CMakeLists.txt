@@ -22,9 +22,17 @@ find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(rosgraph_msgs REQUIRED)
 
 # add_library(${PROJECT_NAME}
 # )
+add_executable(clock_publisher src/clock_publisher.cpp)
+ament_target_dependencies(clock_publisher rclcpp rosgraph_msgs)
+
+install(TARGETS
+  clock_publisher
+  DESTINATION lib/${PROJECT_NAME}
+)
 
 install(DIRECTORY
   launch
