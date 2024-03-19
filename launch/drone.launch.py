@@ -68,6 +68,7 @@ def generate_launch_description():
     ]
     return LaunchDescription([
         use_sim_time_arg,
+        record_bag_arg,
         clock_publisher,
         conditional_actions,
         *always_included_actions]
