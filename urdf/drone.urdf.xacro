@@ -60,7 +60,7 @@
 
   <!-- Vertical LiDAR -->
   <joint name="vertical_lidar_joint" type="fixed">
-    <origin xyz="-0.192 0 0.005" rpy="0 1.507 0"/> <!-- Adjust position and orientation -->
+    <origin xyz="-0.192 0 0.005" rpy="0 -1.57079 0"/> <!-- Adjust position and orientation -->
     <parent link="base_link"/>
     <child link="vertical_laser_link"/>
   </joint>

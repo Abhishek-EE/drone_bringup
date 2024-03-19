@@ -13,10 +13,6 @@ def generate_launch_description():
         get_package_share_directory('sensor_integration_suite'),
         'launch'
     )
-    gazebo_ros_launch_dir = os.path.join(
-        get_package_share_directory('gazebo_ros'),
-        'launch'
-    )
     package_dir = get_package_share_directory('drone_bringup')
     assets_dir = os.path.join(package_dir,'assets')
     package_launch_dir = os.path.join(package_dir,'launch')
@@ -26,7 +22,12 @@ def generate_launch_description():
 
     use_sim_time_arg = DeclareLaunchArgument(
         'use_sim_time', default_value='false',
-        description='Use simulation time')   
+        description='Use simulation time')
+
+    record_bag_arg = DeclareLaunchArgument(
+        'record_data', default='false',
+        description='record data from lidar and zed camera'
+    )   
     
     
     # Record Bag file
@@ -34,7 +35,9 @@ def generate_launch_description():
         cmd=[  'ros2', 'bag', 'record', '-o',
                 bag_file_path,
                 '/merged/point_cloud', '/zed/zed_node/odom',
-                '/zed/zed_node/imu/data','/tf','/tf_static','/clock'
+                '/zed/zed_node/imu/data','/tf','/tf_static',
+                '/lidar/points_hz','/lidar/points_vt',
+                '/zed/zed_node/point_cloud/cloud_registered'
             ],
             output='screen'
     )
@@ -48,16 +51,16 @@ def generate_launch_description():
     )
 
     clock_publisher = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([package_launch_dir, '/clock_publisher.launch.py'])
+        PythonLaunchDescriptionSource([package_launch_dir, '/clock_publisher.launch.py']),
+        condition=IfCondition(LaunchConfiguration('use_sim_time'))
     )
 
     conditional_actions = GroupAction(
         actions=[
-            LogInfo(msg=["This is a message printed from the launch file!"]),
-            clock_publisher,
+            LogInfo(msg=["Starting the recording of bag files"]),
             record_bag# Add record_bag action here
         ],
-        condition=IfCondition(LaunchConfiguration('use_sim_time'))
+        condition=IfCondition(LaunchConfiguration('record_data'))
     )
     always_included_actions = [
         robot_state_publisher,# Add robot_state_publisher action here
@@ -65,6 +68,7 @@ def generate_launch_description():
     ]
     return LaunchDescription([
         use_sim_time_arg,
+        clock_publisher,
         conditional_actions,
         *always_included_actions]
     )
