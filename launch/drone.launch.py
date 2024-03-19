@@ -25,7 +25,7 @@ def generate_launch_description():
         description='Use simulation time')
 
     record_bag_arg = DeclareLaunchArgument(
-        'record_data', default='false',
+        'record_data', default_value='false',
         description='record data from lidar and zed camera'
     )   
     
